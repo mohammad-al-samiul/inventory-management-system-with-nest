@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductsModule } from './products/products.module';
-import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 import { ConfigModule } from '@nestjs/config';
+import { SubcategoriesModule } from './modules/subcategories/subcategories.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { StockHistoryModule } from './modules/stock-history/stock-history.module';
+import { StockModule } from './modules/stock/stock.module';
 
 @Module({
   imports: [
@@ -29,6 +33,10 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     ProductsModule,
     CategoriesModule,
+    SubcategoriesModule,
+    SuppliersModule,
+    StockModule,
+    StockHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
