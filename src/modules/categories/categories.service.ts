@@ -7,7 +7,20 @@ export class CategoriesService {
   constructor(private dataSource: DataSource) {}
 
   async findAll() {
-    return this.dataSource.query('SELECT * FROM categories ORDER BY id ASC');
+    const categories = await this.dataSource.query(
+      'SELECT * FROM categories ORDER BY id ASC',
+    );
+
+    for (const category of categories) {
+      const subcategories = await this.dataSource.query(
+        'SELECT * FROM sub_categories WHERE category_id = $1',
+        [category.id],
+      );
+
+      category.subcategories = subcategories;
+    }
+
+    return categories;
   }
 
   async findOne(id: number) {

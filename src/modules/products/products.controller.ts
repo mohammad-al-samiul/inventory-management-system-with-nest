@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto } from './dto/products.dto';
@@ -19,6 +19,11 @@ export class ProductsController {
     return this.service.findAll();
   }
 
+  @Get('joined')
+  findAllJoined() {
+    return this.service.findAllJoined();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(+id);
@@ -29,7 +34,7 @@ export class ProductsController {
     return this.service.create(dto);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.service.update(+id, dto);
   }

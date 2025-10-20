@@ -11,6 +11,7 @@ import { SubcategoriesModule } from './modules/subcategories/subcategories.modul
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { StockHistoryModule } from './modules/stock-history/stock-history.module';
 import { StockModule } from './modules/stock/stock.module';
+import { ProductSuppliersModule } from './modules/product-suppliers/product-suppliers.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { StockModule } from './modules/stock/stock.module';
     SuppliersModule,
     StockModule,
     StockHistoryModule,
+    ProductSuppliersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -17,7 +17,7 @@ export class ProductsService {
 
   async findOne(id: number) {
     const res = await this.dataSource.query(
-      `SELECT p.*, s.name as subcategory_name, sup.name as supplier_name
+      `SELECT p.*, s.name as subcategory_name, s up.name as supplier_name
        FROM products p
        JOIN sub_categories s ON p.subcategory_id = s.id
        JOIN suppliers sup ON p.supplier_id = sup.id
@@ -25,6 +25,59 @@ export class ProductsService {
       [id],
     );
     return res[0];
+  }
+
+  async findAllJoined() {
+    const rows = await this.dataSource.query(`
+    SELECT 
+      c.id AS category_id,
+      c.name AS category_name,
+      s.id AS subcategory_id,
+      s.name AS subcategory_name,
+      p.id AS product_id,
+      p.name AS product_name,
+      p.price as product_price
+    FROM categories c
+    JOIN sub_categories s ON s.category_id = c.id
+    JOIN products p ON p.subcategory_id = s.id
+    ORDER BY c.id, s.id, p.id;
+  `);
+
+    const categories: any[] = [];
+
+    for (const row of rows) {
+      let category = categories.find((c) => c.id === row.category_id);
+
+      if (!category) {
+        category = {
+          id: row.category_id,
+          name: row.category_name,
+          subcategories: [],
+        };
+        categories.push(category);
+      }
+
+      let subcategory = category.subcategories.find(
+        (s) => s.id === row.subcategory_id,
+      );
+
+      if (!subcategory) {
+        subcategory = {
+          id: row.subcategory_id,
+          name: row.subcategory_name,
+          products: [],
+        };
+        category.subcategories.push(subcategory);
+      }
+
+      subcategory.products.push({
+        id: row.product_id,
+        name: row.product_name,
+        price: row.price,
+      });
+    }
+
+    return categories;
   }
 
   async create(dto: CreateProductDto) {

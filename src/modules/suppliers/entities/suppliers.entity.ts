@@ -17,9 +17,6 @@ export class Supplier {
   name: string;
 
   @Column()
-  contact_person: string;
-
-  @Column()
   phone: string;
 
   @Column()
@@ -27,6 +24,9 @@ export class Supplier {
 
   @Column({ nullable: true })
   address: string;
+
+  @Column({ default: true })
+  is_active: boolean;
 
   @OneToMany(() => Product, (product) => product.supplier)
   products: Product[];

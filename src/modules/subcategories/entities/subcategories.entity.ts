@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('sub_categories')
 export class SubCategory {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,7 +23,7 @@ export class SubCategory {
   @Column()
   image_url: string;
 
-  @Column()
+  @Column({ default: true })
   is_active: boolean;
 
   @Column({ type: 'text' })

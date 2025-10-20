@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { SubcategoriesService } from './subcategories.service';
 import {
@@ -32,7 +32,7 @@ export class SubcategoriesController {
     return this.service.create(dto);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateSubCategoryDto) {
     return this.service.update(+id, dto);
   }
