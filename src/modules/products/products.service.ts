@@ -8,10 +8,22 @@ export class ProductsService {
 
   async findAll() {
     return this.dataSource.query(
-      `SELECT p.*, s.name as subcategory_name, sup.name as supplier_name
-       FROM products p
-       JOIN sub_categories s ON p.subcategory_id = s.id
-       JOIN suppliers sup ON p.supplier_id = sup.id`,
+      `
+       SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        c.id AS category_id,
+        c.name AS category_name,
+        s.id AS subcategory_id,
+        s.name AS subcategory_name
+      FROM products p
+      LEFT JOIN categories c
+        ON p.category_id = c.id
+      LEFT JOIN sub_categories s
+        ON p.subcategory_id = s.id
+      ORDER BY p.id
+      `,
     );
   }
 
@@ -29,18 +41,20 @@ export class ProductsService {
 
   async findAllJoined() {
     const rows = await this.dataSource.query(`
-    SELECT 
-      c.id AS category_id,
-      c.name AS category_name,
-      s.id AS subcategory_id,
-      s.name AS subcategory_name,
-      p.id AS product_id,
-      p.name AS product_name,
-      p.price as product_price
-    FROM categories c
-    JOIN sub_categories s ON s.category_id = c.id
-    JOIN products p ON p.subcategory_id = s.id
-    ORDER BY c.id, s.id, p.id;
+    SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        c.id AS category_id,
+        c.name AS category_name,
+        s.id AS subcategory_id,
+        s.name AS subcategory_name
+      FROM products p
+      LEFT JOIN categories c
+        ON p.category_id = c.id
+      LEFT JOIN sub_categories s
+        ON p.subcategory_id = s.id
+      ORDER BY p.id
   `);
 
     const categories: any[] = [];
@@ -58,7 +72,7 @@ export class ProductsService {
       }
 
       let subcategory = category.subcategories.find(
-        (s) => s.id === row.subcategory_id,
+        (s: any) => s.id === row.subcategory_id,
       );
 
       if (!subcategory) {
@@ -70,7 +84,7 @@ export class ProductsService {
         category.subcategories.push(subcategory);
       }
 
-      subcategory.products.push({
+      subcategory?.products.push({
         id: row.product_id,
         name: row.product_name,
         price: row.price,

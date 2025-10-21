@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Category } from 'src/modules/categories/entities/categories.entity';
 
 @Entity('products')
 export class Product {
@@ -36,6 +37,9 @@ export class Product {
 
   @Column({ nullable: true })
   image_url: string;
+
+  @ManyToOne(() => Category, (c) => c.subcategories)
+  category_id: number;
 
   @ManyToOne(() => SubCategory, (sub) => sub.products)
   @JoinColumn({ name: 'subcategory_id' })

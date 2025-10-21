@@ -63,4 +63,7 @@ export class UserOTP {
 
   @Column({ type: 'timestamp' })
   expires_at: Date;
+
+  @CreateDateColumn()
+  created_at: Timestamp;
 }

@@ -8,8 +8,12 @@ export class UsersController {
 
   @Post('register')
   register(@Body() dto: CreateUserDto) {
-    console.log(dto);
     return this.usersService.register(dto);
+  }
+
+  @Patch('activate-user')
+  async activateUser(@Body('email') email: string) {
+    return this.usersService.activateUser(email);
   }
 
   @Post('login')
