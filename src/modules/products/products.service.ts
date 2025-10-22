@@ -42,19 +42,19 @@ export class ProductsService {
   async findAllJoined() {
     const rows = await this.dataSource.query(`
     SELECT
-        p.id AS product_id,
-        p.name AS product_name,
-        p.price,
-        c.id AS category_id,
-        c.name AS category_name,
-        s.id AS subcategory_id,
-        s.name AS subcategory_name
-      FROM products p
-      LEFT JOIN categories c
-        ON p.category_id = c.id
-      LEFT JOIN sub_categories s
-        ON p.subcategory_id = s.id
-      ORDER BY p.id
+      p.id AS product_id,
+      p.name AS product_name,
+      p.price,
+      c.id AS category_id,
+      c.name AS category_name,
+      s.id AS subcategory_id,
+      s.name AS subcategory_name
+    FROM products p
+    LEFT JOIN categories c
+      ON p.category_id = c.id
+    LEFT JOIN sub_categories s
+      ON p.subcategory_id = s.id
+    ORDER BY c.id, s.id, p.id
   `);
 
     const categories: any[] = [];
@@ -67,31 +67,51 @@ export class ProductsService {
           id: row.category_id,
           name: row.category_name,
           subcategories: [],
+          products: [],
         };
         categories.push(category);
       }
 
-      let subcategory = category.subcategories.find(
-        (s: any) => s.id === row.subcategory_id,
-      );
+      // if subcategory exist
+      if (row.subcategory_id) {
+        let subcategory = category.subcategories.find(
+          (s: any) => s.id === row.subcategory_id,
+        );
 
-      if (!subcategory) {
-        subcategory = {
-          id: row.subcategory_id,
-          name: row.subcategory_name,
-          products: [],
-        };
-        category.subcategories.push(subcategory);
+        if (!subcategory) {
+          subcategory = {
+            id: row.subcategory_id,
+            name: row.subcategory_name,
+            products: [],
+          };
+          category.subcategories.push(subcategory);
+        }
+
+        subcategory.products.push({
+          id: row.product_id,
+          name: row.product_name,
+          price: row.price,
+        });
       }
-
-      subcategory?.products.push({
-        id: row.product_id,
-        name: row.product_name,
-        price: row.price,
-      });
+      // if subcategory does not exist -> store product in category.products
+      else {
+        category.products.push({
+          id: row.product_id,
+          name: row.product_name,
+          price: row.price,
+        });
+      }
     }
 
-    return categories;
+    // empty subcategories remove
+    return categories.map((cat) => {
+      if (cat.subcategories.length === 0) {
+        delete cat.subcategories;
+      } else if (cat.products.length === 0) {
+        delete cat.products;
+      }
+      return cat;
+    });
   }
 
   async create(dto: CreateProductDto) {

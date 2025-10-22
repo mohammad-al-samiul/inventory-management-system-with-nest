@@ -29,7 +29,7 @@ import { ProductSuppliersModule } from './modules/product-suppliers/product-supp
       database: process.env.DB_NAME,
 
       autoLoadEntities: true,
-      synchronize: false, // only for dev
+      synchronize: true, // only for dev
     }),
     UsersModule,
     ProductsModule,

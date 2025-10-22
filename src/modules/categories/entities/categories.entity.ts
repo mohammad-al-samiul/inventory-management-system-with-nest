@@ -1,3 +1,4 @@
+import { Product } from 'src/modules/products/entities/product.entity';
 import { SubCategory } from 'src/modules/subcategories/entities/subcategories.entity';
 import {
   Column,
@@ -27,6 +28,9 @@ export class Category {
 
   @Column({ type: 'text' })
   description: string;
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 
   @CreateDateColumn()
   created_at: Date;

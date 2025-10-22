@@ -38,8 +38,9 @@ export class Product {
   @Column({ nullable: true })
   image_url: string;
 
-  @ManyToOne(() => Category, (c) => c.subcategories)
-  category_id: number;
+  @ManyToOne(() => Category, (category) => category.products)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
 
   @ManyToOne(() => SubCategory, (sub) => sub.products)
   @JoinColumn({ name: 'subcategory_id' })
