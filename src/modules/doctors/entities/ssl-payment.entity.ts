@@ -9,7 +9,7 @@ export class SslReqLog {
   req_tran_id: string;
 
   @Column({ type: 'varchar', length: 20 })
-  status: string; // 'VALID', 'FAILED', etc.
+  status: string; // 'VALID', 'FAILED'
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total_amount: number;

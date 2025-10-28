@@ -10,6 +10,7 @@ export class NagadPayment {
 
   @Column({ type: 'varchar', length: 20 })
   status: string;
+
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   packageAmount: number;
 

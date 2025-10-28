@@ -9,12 +9,16 @@ export class DoctorsService {
   async getDoctorPayments(doctor_id: string | null, dto: GetDoctorPaymentsDto) {
     const { start_date, end_date } = dto;
 
+    const dateFilter =
+      start_date && end_date
+        ? `AND dc.created_at BETWEEN '${start_date}' AND '${end_date}'`
+        : '';
     const query = `
       WITH doctor_calls AS (
         SELECT *
-        FROM dbo.dt_ondemand_doctor_call
-        WHERE (${doctor_id ? `'${doctor_id}'` : 'NULL'} IS NULL OR doctor_id = '${doctor_id}')
-          AND created_at BETWEEN '${start_date}' AND '${end_date}'
+      FROM dbo.dt_ondemand_doctor_call dc
+      WHERE (${doctor_id ? `'${doctor_id}'` : 'NULL'} IS NULL OR doctor_id = '${doctor_id}')
+        ${dateFilter}
       )
       SELECT 
           dc.doctor_id,
