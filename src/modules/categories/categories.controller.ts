@@ -6,14 +6,17 @@ import {
   Param,
   Delete,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly service: CategoriesService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.service.findAll();

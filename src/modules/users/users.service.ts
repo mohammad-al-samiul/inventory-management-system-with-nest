@@ -48,8 +48,6 @@ export class UsersService {
       [email],
     );
 
-    console.log(parseInt(countResult[0].count));
-
     if (parseInt(countResult[0].count) >= 5) {
       throw new BadRequestException(
         'You have already reached the limit. Try again after 24 hours',
@@ -69,7 +67,7 @@ export class UsersService {
       throw new BadRequestException('User already exists');
     }
 
-    await this.checkRateLimit(email);
+    // await this.checkRateLimit(email);
     const hash_password = await bcrypt.hash(password, 10);
     const activation_token = uuidv4();
 
@@ -171,11 +169,6 @@ export class UsersService {
       [email, otp],
     );
 
-    // await this.datasource.query(
-    //   `UPDATE users SET reset_token=NULL WHERE reset_token=$1`,
-    //   [user.reset_token],
-    // );
-
     return {
       message: 'Password reset link sent to your email',
     };
@@ -186,8 +179,6 @@ export class UsersService {
       `SELECT * FROM users WHERE reset_token=$1`,
       [dto.token],
     );
-
-    console.log(user);
 
     if (user.length === 0) throw new BadRequestException('Invalid token');
 
